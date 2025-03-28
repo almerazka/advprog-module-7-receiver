@@ -1,6 +1,10 @@
 # BambangShop Receiver App
 Tutorial and Example for Advanced Programming 2024 - Faculty of Computer Science, Universitas Indonesia
 
+- Nama : Muhammad Almerazka Yocendra
+- NPM : 2306241745
+- Kelas : Pemrograman Lanjut - A
+
 ---
 
 ## About this Project
@@ -59,14 +63,14 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   Open another new terminal, edit `ROCKET_PORT` in `.env` to `8003`, then execute `cargo run`.
 
 ## Mandatory Checklists (Subscriber)
--   [ ] Clone https://gitlab.com/ichlaffterlalu/bambangshop-receiver to a new repository.
+-   [x] Clone https://gitlab.com/ichlaffterlalu/bambangshop-receiver to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create SubscriberRequest model struct.`
-    -   [ ] Commit: `Create Notification database and Notification repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Notification repository.`
-    -   [ ] Commit: `Implement list_all_as_string function in Notification repository.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
+    -   [x] Commit: `Create Notification model struct.`
+    -   [x] Commit: `Create SubscriberRequest model struct.`
+    -   [x] Commit: `Create Notification database and Notification repository struct skeleton.`
+    -   [x] Commit: `Implement add function in Notification repository.`
+    -   [x] Commit: `Implement list_all_as_string function in Notification repository.`
+    -   [x] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
 -   **STAGE 3: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -84,6 +88,18 @@ This is the place for you to write reflections:
 
 ### Mandatory (Subscriber) Reflections
 
-#### Reflection Subscriber-1
+<details>
+    <summary><strong> Reflection Subscriber-1 💡 </strong></summary>
+  
+1. **In this tutorial, we used RwLock<> to synchronise the use of Vec of Notifications. Explain why it is necessary for this case, and explain why we do not use Mutex<> instead?**
+    > Dalam tutorial ini, kita menggunakan **RwLock<Vec<Notification>>** untuk menyinkronkan akses ke daftar notifikasi agar beberapa _thread_ dapat membaca atau menulis secara aman tanpa menyebabkan _race condition_ atau _crash_. **RwLock<>** dipilih karena memungkinkan banyak _thread_ membaca secara bersamaan, sementara hanya satu _thread_ yang boleh menulis pada satu waktu. Ini lebih efisien dibandingkan **Mutex<>**, yang mengunci akses secara penuh sehingga baik pembaca maupun penulis harus menunggu giliran. Jika menggunakan **Mutex<>**, setiap operasi baca dan tulis harus dilakukan secara eksklusif, yang berarti semua _thread_ harus antri meskipun hanya ingin membaca data, yang sebenarnya tidak mengubah apa pun.
+    
+    > Karena dalam kasus ini lebih banyak operasi membaca dibandingkan menulis, **RwLock<>** menjadi pilihan yang lebih optimal karena mengizinkan banyak _thread_ membaca tanpa harus saling menunggu, menjaga responsivitas aplikasi, dan mengurangi _bottleneck_ yang bisa terjadi jika setiap operasi baca harus menunggu akses eksklusif seperti pada **Mutex<>**. Dengan **RwLock<>**, kita bisa tetap menjaga sinkronisasi data sambil memastikan performa tetap cepat dan efisien, sehingga cocok untuk skenario ini.
+
+2.  **In this tutorial, we used lazy_static external library to define Vec and DashMap as a “static” variable. Compared to Java where we can mutate the content of a static variable via a static function, why did not Rust allow us to do so?**
+    >  Di **Rust**, variabel _static_ bersifat _immutable_ secara _default_ untuk memastikan _memory_ dan _thread safety_ sejak tahap kompilasi. Berbeda dengan Java, di mana variabel _static_ bisa diubah melalui metode _static_ tanpa batasan, **Rust** menerapkan aturan kepemilikan (_ownership_) dan peminjaman (_borrowing_) yang lebih ketat untuk mencegah data _race_ dan perilaku tak terdefinisi dalam program yang berjalan secara konkuren. **Rust** tidak mengizinkan mutasi langsung pada variabel _static_ karena ingin menghindari potensi _bug_ yang bisa muncul akibat akses data secara bersamaan oleh beberapa thread.
+    
+    > Sementara di **Java** perubahan langsung pada variabel _static_ diperbolehkan karena adanya _garbage collector_ dan _runtime checks_ yang menangani masalah memori, **Rust** memilih pendekatan eksplisit untuk memastikan keamanan data. Jika kita ingin menggunakan variabel _static_ yang bisa diubah, kita harus menggunakan mekanisme sinkronisasi tambahan seperti `lazy_static!` dengan `RwLock<>` atau `Mutex<>`. Ini memastikan bahwa akses ke data tetap aman tanpa menyebabkan korupsi memori atau kondisi balapan (_race condition_). Dengan pembatasan ini, **Rust** memberikan jaminan keamanan yang lebih kuat dalam pemrograman konkuren, sekaligus memberi _developer_ kontrol penuh atas bagaimana data dikelola dan diakses dalam aplikasi.
+</details>
 
 #### Reflection Subscriber-2
