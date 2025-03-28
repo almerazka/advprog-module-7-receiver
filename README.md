@@ -72,16 +72,16 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement list_all_as_string function in Notification repository.`
     -   [x] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
 -   **STAGE 3: Implement services and controllers**
-    -   [ ] Commit: `Create Notification service struct skeleton.`
-    -   [ ] Commit: `Implement subscribe function in Notification service.`
-    -   [ ] Commit: `Implement subscribe function in Notification controller.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification service.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification controller.`
-    -   [ ] Commit: `Implement receive_notification function in Notification service.`
-    -   [ ] Commit: `Implement receive function in Notification controller.`
-    -   [ ] Commit: `Implement list_messages function in Notification service.`
-    -   [ ] Commit: `Implement list function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-2" questions in this README.
+    -   [x] Commit: `Create Notification service struct skeleton.`
+    -   [x] Commit: `Implement subscribe function in Notification service.`
+    -   [x] Commit: `Implement subscribe function in Notification controller.`
+    -   [x] Commit: `Implement unsubscribe function in Notification service.`
+    -   [x] Commit: `Implement unsubscribe function in Notification controller.`
+    -   [x] Commit: `Implement receive_notification function in Notification service.`
+    -   [x] Commit: `Implement receive function in Notification controller.`
+    -   [x] Commit: `Implement list_messages function in Notification service.`
+    -   [x] Commit: `Implement list function in Notification controller.`
+    -   [x] Write answers of your learning module's "Reflection Subscriber-2" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -102,4 +102,22 @@ This is the place for you to write reflections:
     > Sementara di **Java** perubahan langsung pada variabel _static_ diperbolehkan karena adanya _garbage collector_ dan _runtime checks_ yang menangani masalah memori, **Rust** memilih pendekatan eksplisit untuk memastikan keamanan data. Jika kita ingin menggunakan variabel _static_ yang bisa diubah, kita harus menggunakan mekanisme sinkronisasi tambahan seperti `lazy_static!` dengan `RwLock<>` atau `Mutex<>`. Ini memastikan bahwa akses ke data tetap aman tanpa menyebabkan korupsi memori atau kondisi balapan (_race condition_). Dengan pembatasan ini, **Rust** memberikan jaminan keamanan yang lebih kuat dalam pemrograman konkuren, sekaligus memberi _developer_ kontrol penuh atas bagaimana data dikelola dan diakses dalam aplikasi.
 </details>
 
-#### Reflection Subscriber-2
+<details>
+    <summary><strong> Reflection Subscriber-2 💡 </strong></summary>
+  
+1. **Have you explored things outside of the steps in the tutorial, for example: src/lib.rs? If not, explain why you did not do so. If yes, explain things that you have learned from those other parts of code.**
+    > Ya, saya sudah mengeksplorasi bagian lain di luar langkah-langkah tutorial, khususnya di `src/lib.rs`. Saya memahami bahwa `lib.rs` biasanya digunakan untuk mendefinisikan modul yang dapat digunakan kembali di dalam proyek, terutama dalam proyek yang menggunakan **Rocket** sebagai _framework_. Dengan adanya `lib.rs`, kode menjadi lebih modular dan terorganisir, karena berbagai bagian seperti _routing_ dan _handler_ bisa dipisahkan ke dalam modul tersendiri. Selain itu, saya juga belajar bahwa banyak proyek **Rust** menempatkan logika utama dalam `lib.rs` agar dapat diuji secara terpisah dari aplikasi utama, sehingga lebih mudah untuk menulis dan menjalankan _unit test_ menggunakan atribut `#[cfg(test)]` dan `#[test]`.
+   
+    > Selain itu, saya juga melihat bagaimana arsitektur aplikasi disusun dengan pemisahan yang jelas antara _controller_, _service_, dan _repository_, yang membuat kode lebih rapi dan mudah dikelola. Saya juga belajar tentang penggunaan `lazy_static!` untuk membuat konfigurasi dan _client_ HTTP global lebih efisien, serta bagaimana `RwLock<>` dan `Mutex<>` digunakan untuk manajemen akses data yang lebih aman dan efisien. Intinya `src/lib.rs` sudah dirancang agar _scalable_, efisien, dan aman dari _race condition_ dalam pengaksesan data bersama. Jadi, eksplorasi yang saya lakukan cukup membantu untuk memahami bagaimana aplikasi ini bekerja di balik layar dan bagaimana cara menulis kode yang lebih modular serta _maintainable_.
+
+2.  **Since you have completed the tutorial by now and have tried to test your notification system by spawning multiple instances of Receiver, explain how Observer pattern eases you to plug in more subscribers. How about spawning more than one instance of Main app, will it still be easy enough to add to the system?**
+    >  _Observer pattern_ sangat membantu dalam menambahkan _subscriber_ baru ke dalam sistem karena pola ini memungkinkan pemisahan yang jelas antara _publisher_ (**Main app**) dan _subscriber_ (**Receiver**). Dengan _Observer pattern_, setiap kali ada perubahan status produk, _publisher_ cukup memberi tahu semua _subscriber_ yang telah terdaftar tanpa perlu mengetahui detail implementasi masing-masing _subscriber_. Ini memudahkan penambahan _subscriber_ baru tanpa harus mengubah kode utama aplikasi. 
+    
+    > Saat saya mencoba menjalankan beberapa _instance_ **Receiver**, setiap _instance_ dapat menerima notifikasi secara independen karena mereka hanya perlu berlangganan melalui _endpoint_ yang telah disediakan. Sistem ini fleksibel karena daftar _subscriber_ dikelola secara dinamis, sehingga penambahan _subscriber_ hanya memerlukan pemanggilan API tanpa perlu mengubah arsitektur _backend_. Penambahan **Receiver** baru juga simpel—tinggal jalankan _instance_ baru dengan _port_ dan nama unik, lalu daftar ke jenis produk yang diinginkan. Namun, jika ingin menambahkan lebih dari satu _instance_ **Main app**, tantangannya menjadi lebih kompleks. Diperlukan mekanisme sinkronisasi agar setiap _instance_ memiliki daftar _subscriber_ yang sama dan tidak terjadi inkonsistensi data
+
+3.  **Have you tried to make your own Tests, or enhance documentation on your Postman collection? If you have tried those features, tell us whether it is useful for your work (it can be your tutorial work or your Group Project).**
+    >  Ya, saya sudah mencoba membuat test sendiri di **Postman** _collection_, bahkan untuk mata kuliah lain. Fitur ini sangat membantu dalam mengotomatiskan validasi respons dan menangkap error lebih awal, sehingga tidak perlu melakukan pengecekan manual satu per satu. Dengan adanya _test_, saya bisa memastikan bahwa notifikasi terkirim dengan benar dan _response_ API sesuai dengan yang diharapkan.
+    
+    > Selain itu, dokumentasi di **Postman** juga sangat berguna, terutama saat bekerja dalam tim. Dengan mendokumentasikan setiap _endpoint_, parameter yang dibutuhkan, format _response_, serta kemungkinan skenario _error_, tim lain bisa lebih mudah memahami dan menggunakan API tanpa harus membaca kode secara langsung. Dokumentasi ini juga bisa langsung digunakan untuk testing di **Postman**, yang tentunya mempercepat proses _debugging_ dan validasi sistem. Secara keseluruhan, baik _test_ maupun dokumentasi di **Postman** membuat pengembangan lebih rapi, efisien, dan menghemat banyak waktu saat melakukan debugging atau kolaborasi dalam proyek.
+
+</details>
